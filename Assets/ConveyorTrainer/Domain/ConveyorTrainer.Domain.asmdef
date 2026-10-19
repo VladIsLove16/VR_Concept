@@ -1,0 +1,5 @@
+{
+  "name": "ConveyorTrainer.Domain",
+  "rootNamespace": "ConveyorTrainer.Domain",
+  "noEngineReferences": true
+}

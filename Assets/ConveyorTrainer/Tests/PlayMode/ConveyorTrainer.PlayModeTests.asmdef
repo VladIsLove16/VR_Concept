@@ -1,0 +1,5 @@
+{
+  "name": "ConveyorTrainer.PlayModeTests",
+  "references": ["ConveyorTrainer.Domain", "ConveyorTrainer.Runtime", "ConveyorTrainer.TestSupport", "Unity.XR.Interaction.Toolkit", "Unity.InputSystem", "Unity.XR.CoreUtils", "Unity.ugui"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

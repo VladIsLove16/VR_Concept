@@ -1,0 +1,6 @@
+{
+  "name": "ConveyorTrainer.TestSupport",
+  "references": ["ConveyorTrainer.Domain"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}

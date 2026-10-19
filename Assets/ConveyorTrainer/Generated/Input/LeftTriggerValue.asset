@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: LeftTriggerValue
+  m_EditorClassIdentifier: 
+  m_Asset: {fileID: -944628639613478452, guid: 463f969bd6c28b04ca553a2b7a79d02b, type: 3}
+  m_ActionId: 8ec0d2b2-e44e-491a-9e12-492772ea84e5

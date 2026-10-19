@@ -1,0 +1,5 @@
+{
+  "name": "ConveyorTrainer.Runtime",
+  "rootNamespace": "ConveyorTrainer",
+  "references": ["ConveyorTrainer.Domain", "Unity.XR.Interaction.Toolkit", "Unity.InputSystem", "Unity.XR.CoreUtils", "Unity.ugui"]
+}

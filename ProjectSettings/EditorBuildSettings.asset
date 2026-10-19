@@ -6,6 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  m_configObjects: {}
+    path: Assets/ConveyorTrainer/Generated/Scenes/ConveyorTraining.unity
+    guid: 71db6a7d1d9c97e4b94cb711c4c9dd84
+  m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7449033a507f74542bfe43e7219663b6,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 18f7aa9fcbcf8c649afb4174a3996f33,
+      type: 2}
