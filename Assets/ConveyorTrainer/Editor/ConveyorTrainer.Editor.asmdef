@@ -1,6 +1,6 @@
 {
   "name": "ConveyorTrainer.Editor",
   "rootNamespace": "ConveyorTrainer.Editor",
-  "references": ["ConveyorTrainer.Domain", "ConveyorTrainer.Runtime", "Unity.XR.Interaction.Toolkit", "Unity.InputSystem", "Unity.XR.CoreUtils", "Unity.ugui", "Unity.XR.Management", "Unity.XR.Management.Editor"],
+  "references": ["ConveyorTrainer.Domain", "ConveyorTrainer.Runtime", "Unity.XR.Interaction.Toolkit", "Unity.InputSystem", "Unity.XR.CoreUtils", "Unity.ugui", "Unity.XR.Management", "Unity.XR.Management.Editor", "Unity.XR.OpenXR", "Unity.XR.OpenXR.Editor"],
   "includePlatforms": ["Editor"]
 }

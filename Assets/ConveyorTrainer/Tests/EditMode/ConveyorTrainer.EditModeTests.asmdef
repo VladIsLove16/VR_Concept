@@ -1,6 +1,6 @@
 {
   "name": "ConveyorTrainer.EditModeTests",
-  "references": ["ConveyorTrainer.Domain", "ConveyorTrainer.Runtime", "ConveyorTrainer.Editor", "ConveyorTrainer.TestSupport", "Unity.XR.Interaction.Toolkit", "Unity.ugui"],
+  "references": ["ConveyorTrainer.Domain", "ConveyorTrainer.Runtime", "ConveyorTrainer.Editor", "ConveyorTrainer.TestSupport", "Unity.XR.Interaction.Toolkit", "Unity.ugui", "Unity.InputSystem", "Unity.XR.OpenXR"],
   "includePlatforms": ["Editor"],
   "optionalUnityReferences": ["TestAssemblies"]
 }

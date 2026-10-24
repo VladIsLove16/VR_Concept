@@ -16,6 +16,7 @@ namespace ConveyorTrainer
         public string TargetId => targetId;
         public Operation Operation => operation;
         public int Index => index;
+        public bool IsFastener => operation == Operation.SensorNut || operation == Operation.PusherBolt;
         public bool Suggested { get; set; }
         public void Configure(TrainingStation owner, string id, string label, Operation action, int actionIndex, Renderer renderer)
         { station = owner; targetId = id; displayName = label; operation = action; index = actionIndex; visual = renderer; }
@@ -24,8 +25,10 @@ namespace ConveyorTrainer
         {
             base.OnSelectEntered(args);
             var hand = args.interactorObject.transform.GetComponentInParent<InteractorHand>();
-            station.Execute(new Request(operation, hand != null ? hand.Hand : Hand.Right, index: index), targetId);
+            ExecuteForHand(hand != null ? hand.Hand : Hand.Right);
         }
+        public ActionResult ExecuteForHand(Hand hand)
+            => station.Execute(new Request(operation, hand, index: index), targetId);
         protected override void OnHoverEntered(HoverEnterEventArgs args) { base.OnHoverEntered(args); if (station != null) station.ShowHover(displayName); }
         protected override void OnHoverExited(HoverExitEventArgs args) { base.OnHoverExited(args); if (station != null && !isHovered) station.ShowHover(""); }
         private void Update()

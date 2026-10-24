@@ -13,6 +13,10 @@ namespace ConveyorTrainer
         [SerializeField] private ItemSocket bench;
         [SerializeField] private ItemSocket mount;
         [SerializeField] private Renderer visual;
+        [SerializeField] private Transform workTip;
+        [SerializeField, Min(0.01f)] private float workRadius = 0.06f;
+        [SerializeField] private LayerMask workLayers = 1 << 8;
+        private readonly Collider[] workContacts = new Collider[16];
         private bool accepted;
         private Hand selectedHand;
         private bool releasing;
@@ -20,6 +24,7 @@ namespace ConveyorTrainer
         public ItemId ItemId => itemId;
         public ItemSocket Bench => bench;
         public ItemSocket Mount => mount;
+        public void ConfigureToolTip(Transform tip) => workTip = tip;
         public void Configure(TrainingStation owner, ItemId id, string label, ItemSocket benchSlot, ItemSocket equipmentSlot, Renderer renderer)
         { station = owner; itemId = id; displayName = label; bench = benchSlot; mount = equipmentSlot; visual = renderer; }
         public override bool IsSelectableBy(IXRSelectInteractor interactor)
@@ -57,6 +62,34 @@ namespace ConveyorTrainer
             }
             ApplyPose();
             releasing = false;
+        }
+
+        protected override void OnActivated(ActivateEventArgs args)
+        {
+            base.OnActivated(args);
+            if (!accepted || workTip == null || station == null || station.Model == null || station.Completed) return;
+
+            var count = Physics.OverlapSphereNonAlloc(workTip.position, workRadius, workContacts, workLayers, QueryTriggerInteraction.Collide);
+            MaintenanceTarget nearest = null;
+            var nearestDistance = float.PositiveInfinity;
+            for (var i = 0; i < count; i++)
+            {
+                var contact = workContacts[i];
+                var target = contact.GetComponentInParent<MaintenanceTarget>();
+                if (target == null || !target.IsFastener) continue;
+                var distance = (contact.ClosestPoint(workTip.position) - workTip.position).sqrMagnitude;
+                if (distance >= nearestDistance) continue;
+                nearest = target;
+                nearestDistance = distance;
+            }
+            if (nearest == null)
+            {
+                station.ShowMessage("Поднесите рабочую часть инструмента к крепежу и нажмите Trigger.");
+                return;
+            }
+            var result = nearest.ExecuteForHand(selectedHand);
+            if (result.Succeeded && args.interactorObject is XRBaseControllerInteractor controllerInteractor)
+                controllerInteractor.SendHapticImpulse(0.25f, 0.05f);
         }
 
         protected override void OnHoverEntered(HoverEnterEventArgs args) { base.OnHoverEntered(args); station?.ShowHover(displayName + " — захват"); }

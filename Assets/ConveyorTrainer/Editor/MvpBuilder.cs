@@ -124,6 +124,7 @@ namespace ConveyorTrainer.Editor
             EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), ScenePath);
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
             Debug.Log("MVP scene and editable prefabs created at " + ScenePath);
+            PcVrSetup.Apply();
         }
 
         private static ItemSocket Socket(PrefabFactory factory, string name, Vector3 position, Location location)
@@ -156,6 +157,7 @@ namespace ConveyorTrainer.Editor
 
         public static void BuildWindowsPlayer()
         {
+            PcVrSetup.UsePcVr();
             Directory.CreateDirectory("Builds/ConveyorTrainer");
             var result = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { ScenePath },
                 locationPathName = "Builds/ConveyorTrainer/ConveyorTrainer.exe", target = BuildTarget.StandaloneWindows64,
