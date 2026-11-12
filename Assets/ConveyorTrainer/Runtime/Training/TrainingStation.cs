@@ -60,9 +60,14 @@ namespace ConveyorTrainer
         public ActionResult Execute(Request request, string targetId)
         {
             if (Completed && request.Operation != Operation.Place && request.Operation != Operation.InvalidDrop && request.Operation != Operation.Inspect)
+            {
+                InteractionDiagnostics.RecordAction(this, request, targetId, ActionResult.Success, ignored: true);
                 return ActionResult.Success;
+            }
             lastTarget = targetId;
-            return Model.Execute(request);
+            var result = Model.Execute(request);
+            InteractionDiagnostics.RecordAction(this, request, targetId, result);
+            return result;
         }
         private string lastTarget;
 

@@ -6,7 +6,7 @@ namespace ConveyorTrainer.Domain
     public enum ItemId { Wrench, Driver, SensorOriginal, SensorSpare, PusherOriginal, PusherSpare }
     public enum Location { Bench, SensorMount, PusherMount, LeftHand, RightHand }
     public enum Fault { None, Sensor, Pusher }
-    public enum Operation { Power, Air, Vent, SensorCable, SensorNut, PusherTube, PusherBolt, Grab, Place, Inspect, InvalidDrop }
+    public enum Operation { Power, Air, Vent, SensorCable, SensorNut, PusherTube, PusherBolt, Grab, Place, Inspect, InvalidDrop, Start, Stop }
     public enum Failure { None, LineRunning, WrongTool, EquipmentMissing, EquipmentLoose, CableConnected, TubesConnected,
         FastenersTight, AirSupplyOpen, ResidualPressure, HandOccupied, NotHeld, WrongSocket, SocketOccupied, InvalidPlacement }
     public enum InfoTarget { Conveyor, Sensor, Pusher }

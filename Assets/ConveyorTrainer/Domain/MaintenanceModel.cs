@@ -7,7 +7,6 @@ namespace ConveyorTrainer.Domain
     {
         private readonly ItemState[] items = new ItemState[6];
         private readonly bool[] sensorNuts = new bool[2];
-        private readonly bool[] pusherBolts = new bool[2];
         private readonly bool[] tubes = new bool[2];
         public event Action<Request, ActionResult> Attempted;
         public event Action Changed;
@@ -19,14 +18,13 @@ namespace ConveyorTrainer.Domain
         public ItemState Sensor => Mounted(Location.SensorMount);
         public ItemState Pusher => Mounted(Location.PusherMount);
         public bool SensorSecured => sensorNuts[0] && sensorNuts[1];
-        public bool PusherSecured => pusherBolts[0] && pusherBolts[1];
+        public bool PusherSecured { get; private set; }
         public bool SensorOperational => Running && Sensor != null && Sensor.Healthy && SensorSecured && Cable;
         public bool PusherOperational => Running && Pusher != null && Pusher.Healthy && PusherSecured && tubes[0] && tubes[1] && AirOpen && Pressure;
         public bool AssemblyReady => Sensor != null && Pusher != null && SensorSecured && PusherSecured && Cable && tubes[0] && tubes[1];
         public bool HealthyAssembly => AssemblyReady && Sensor.Healthy && Pusher.Healthy && AirOpen && Pressure;
         public ItemState Item(ItemId id) => items[(int)id];
         public bool NutTight(int index) => sensorNuts[index];
-        public bool BoltTight(int index) => pusherBolts[index];
         public bool TubeConnected(int index) => tubes[index];
         public ItemState Held(Hand hand) => Mounted(hand == Hand.Left ? Location.LeftHand : Location.RightHand);
 
@@ -39,7 +37,8 @@ namespace ConveyorTrainer.Domain
             Item(ItemId.PusherOriginal).Location = Location.PusherMount;
             Item(ItemId.SensorOriginal).Healthy = fault != Fault.Sensor;
             Item(ItemId.PusherOriginal).Healthy = fault != Fault.Pusher;
-            for (var i = 0; i < 2; i++) { sensorNuts[i] = true; pusherBolts[i] = true; tubes[i] = true; }
+            for (var i = 0; i < 2; i++) { sensorNuts[i] = true; tubes[i] = true; }
+            PusherSecured = true;
             Cable = AirOpen = Pressure = true;
             Running = running;
             Revision++;
@@ -48,10 +47,13 @@ namespace ConveyorTrainer.Domain
 
         public ActionResult Execute(Request request)
         {
-            if ((request.Operation == Operation.SensorNut || request.Operation == Operation.PusherBolt || request.Operation == Operation.PusherTube)
-                && (request.Index < 0 || request.Index > 1)) throw new ArgumentOutOfRangeException(nameof(request));
+            if (((request.Operation == Operation.SensorNut || request.Operation == Operation.PusherTube) && (uint)request.Index > 1)
+                || (request.Operation == Operation.PusherBolt && request.Index != 0))
+                throw new ArgumentOutOfRangeException(nameof(request));
+            var wasRunning = Running;
             var result = new ActionResult(Apply(request));
-            if (result.Succeeded && request.Operation != Operation.Inspect)
+            var repeatedPowerCommand = (request.Operation == Operation.Start || request.Operation == Operation.Stop) && wasRunning == Running;
+            if (result.Succeeded && request.Operation != Operation.Inspect && !repeatedPowerCommand)
             {
                 // Moving a tool does not change the equipment or invalidate a washer already in flight.
                 if ((request.Operation != Operation.Grab && request.Operation != Operation.Place) || !Item(request.Item).IsTool) Revision++;
@@ -81,8 +83,11 @@ namespace ConveyorTrainer.Domain
             switch (r.Operation)
             {
                 case Operation.Power:
-                    if (!Running && !AssemblyReady) return Failure.EquipmentLoose;
-                    Running = !Running; return Failure.None;
+                case Operation.Start:
+                case Operation.Stop:
+                    var start = r.Operation == Operation.Start || r.Operation == Operation.Power && !Running;
+                    if (start && !Running && !AssemblyReady) return Failure.EquipmentLoose;
+                    Running = start; return Failure.None;
                 case Operation.Air:
                     if (Running) return Failure.LineRunning;
                     if (!AirOpen && (Pusher == null || !PusherSecured || !tubes[0] || !tubes[1])) return Failure.EquipmentLoose;
@@ -108,13 +113,13 @@ namespace ConveyorTrainer.Domain
                     if (Running) return Failure.LineRunning;
                     if (Held(r.Hand)?.Id != ItemId.Driver) return Failure.WrongTool;
                     if (Pusher == null) return Failure.EquipmentMissing;
-                    if (pusherBolts[r.Index])
+                    if (PusherSecured)
                     {
                         if (AirOpen) return Failure.AirSupplyOpen;
                         if (Pressure) return Failure.ResidualPressure;
                         if (tubes[0] || tubes[1]) return Failure.TubesConnected;
                     }
-                    pusherBolts[r.Index] = !pusherBolts[r.Index]; return Failure.None;
+                    PusherSecured = !PusherSecured; return Failure.None;
                 case Operation.PusherTube:
                     if (Running) return Failure.LineRunning;
                     if (Pusher == null) return Failure.EquipmentMissing;
@@ -146,7 +151,7 @@ namespace ConveyorTrainer.Domain
                 if (AirOpen) return Failure.AirSupplyOpen;
                 if (Pressure) return Failure.ResidualPressure;
                 if (tubes[0] || tubes[1]) return Failure.TubesConnected;
-                if (pusherBolts[0] || pusherBolts[1]) return Failure.FastenersTight;
+                if (PusherSecured) return Failure.FastenersTight;
             }
             item.PreviousLocation = item.Location;
             item.Location = r.Hand == Hand.Left ? Location.LeftHand : Location.RightHand;

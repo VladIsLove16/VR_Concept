@@ -80,14 +80,15 @@ namespace ConveyorTrainer.Editor
             }
 
             var targets = new List<MaintenanceTarget>();
-            AddTarget(f, station, interactionManager, targets, "power", "Пуск / Стоп", Operation.Power, 0, new Vector3(1.55f, 0.98f, -0.7f));
+            AddTarget(f, station, interactionManager, targets, "power.start", "Пуск", Operation.Start, 0, new Vector3(1.45f, 0.98f, -0.7f));
+            AddTarget(f, station, interactionManager, targets, "power.stop", "Стоп", Operation.Stop, 0, new Vector3(1.65f, 0.98f, -0.7f));
             AddTarget(f, station, interactionManager, targets, "air", "Подача воздуха", Operation.Air, 0, new Vector3(1.05f, 1.18f, -0.7f));
             AddTarget(f, station, interactionManager, targets, "vent", "Стравливание", Operation.Vent, 0, new Vector3(1.7f, 1.18f, -0.7f));
             AddTarget(f, station, interactionManager, targets, "sensor.cable", "Кабель датчика", Operation.SensorCable, 0, new Vector3(-0.9f, 1.16f, -0.85f));
             for (var i = 0; i < 2; i++)
             {
                 AddTarget(f, station, interactionManager, targets, "sensor.nut." + i, "Гайка " + (i + 1), Operation.SensorNut, i, new Vector3(-1.06f + i * 0.32f, 0.87f, -0.87f));
-                AddTarget(f, station, interactionManager, targets, "pusher.bolt." + i, "Болт " + (i + 1), Operation.PusherBolt, i, new Vector3(0.02f + i * 0.36f, 0.76f, -0.94f));
+                if (i == 0) AddTarget(f, station, interactionManager, targets, "pusher.bolt.0", "Крепёж толкателя", Operation.PusherBolt, 0, new Vector3(0.02f, 0.76f, -0.94f));
                 AddTarget(f, station, interactionManager, targets, "pusher.tube." + i, "Трубка " + (i + 1), Operation.PusherTube, i, new Vector3(0.02f + i * 0.36f, 1.1f, -0.94f));
             }
             AddTarget(f, station, interactionManager, targets, "info.conveyor", "i Конвейер", Operation.Inspect, 0, new Vector3(-1.9f, 1.0f, -0.7f));
@@ -118,6 +119,7 @@ namespace ConveyorTrainer.Editor
             panel.GetComponent<Canvas>().worldCamera = teleportation.GetComponentInChildren<Camera>();
             station.Configure(definitions, line, panel);
             CreateControlsBoard(f, geometry);
+            ConveyorModelIntegration.ApplyTo(SceneManager.GetActiveScene());
             Physics.gravity = new Vector3(0, -9.81f, 0);
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             AssetDatabase.SaveAssets();

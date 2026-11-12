@@ -1,0 +1,166 @@
+{
+    "schemaVersion": 1,
+    "attemptId": "a8fdaa58beec4fa2bf7bb3f2dc86b5fd",
+    "scenarioId": "02-sensor-guided",
+    "startedUtc": "2026-10-23T17:20:37.7948885Z",
+    "durationSeconds": 4561.6520382,
+    "status": "interrupted",
+    "errorCount": 25,
+    "completedRequirements": [
+        "Stopped",
+        "CableDisconnected",
+        "SensorNutsReleased"
+    ],
+    "errors": [
+        {
+            "seconds": 20.465327799999984,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "LineRunning"
+        },
+        {
+            "seconds": 22.881523199999977,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "LineRunning"
+        },
+        {
+            "seconds": 24.86748419999998,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "LineRunning"
+        },
+        {
+            "seconds": 28.083569299999995,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "LineRunning"
+        },
+        {
+            "seconds": 72.0090827,
+            "action": "SensorNut:0",
+            "target": "sensor.nut.0",
+            "reason": "WrongTool"
+        },
+        {
+            "seconds": 73.11003549999998,
+            "action": "SensorNut:1",
+            "target": "sensor.nut.1",
+            "reason": "WrongTool"
+        },
+        {
+            "seconds": 439.6732420000001,
+            "action": "InvalidDrop:0",
+            "target": "Wrench",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 440.1400966,
+            "action": "InvalidDrop:0",
+            "target": "Wrench",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 449.77394860000006,
+            "action": "InvalidDrop:0",
+            "target": "Wrench",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 477.95041190000009,
+            "action": "InvalidDrop:0",
+            "target": "Wrench",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 478.1505020000001,
+            "action": "InvalidDrop:0",
+            "target": "Wrench",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 479.9809957,
+            "action": "SensorNut:1",
+            "target": "sensor.nut.1",
+            "reason": "WrongTool"
+        },
+        {
+            "seconds": 519.6914941,
+            "action": "InvalidDrop:0",
+            "target": "Wrench",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 519.8020759,
+            "action": "InvalidDrop:0",
+            "target": "Wrench",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 522.6553512,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        },
+        {
+            "seconds": 525.2845592,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        },
+        {
+            "seconds": 530.9722529000001,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        },
+        {
+            "seconds": 532.178248,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        },
+        {
+            "seconds": 548.5156021,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        },
+        {
+            "seconds": 554.0165318,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        },
+        {
+            "seconds": 584.2777243,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        },
+        {
+            "seconds": 586.2702383000001,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        },
+        {
+            "seconds": 611.2710652000001,
+            "action": "InvalidDrop:0",
+            "target": "Driver",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 619.2441345,
+            "action": "InvalidDrop:0",
+            "target": "Driver",
+            "reason": "InvalidPlacement"
+        },
+        {
+            "seconds": 620.2486323,
+            "action": "SensorCable:0",
+            "target": "sensor.cable",
+            "reason": "EquipmentLoose"
+        }
+    ]
+}

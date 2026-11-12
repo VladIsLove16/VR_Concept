@@ -16,6 +16,10 @@ namespace ConveyorTrainer
         [SerializeField, Min(0)] private float sensorDelay = 1.69f;
         [SerializeField] private Vector2 beltXLimits = new Vector2(-2.5f, 2.5f);
         [SerializeField, Min(0.1f)] private float beltHalfWidth = 0.42f;
+        [SerializeField] private Transform beltFrame;
+        [SerializeField] private Vector3 beltHalfExtents;
+        [SerializeField] private PusherActuator.MotionVisual originalPusherMotion;
+        [SerializeField] private PusherActuator.MotionVisual sparePusherMotion;
         private readonly List<Washer> washers = new List<Washer>();
         private readonly List<ScheduledStroke> strokes = new List<ScheduledStroke>();
         private MaterialPropertyBlock lampProperties;
@@ -40,6 +44,16 @@ namespace ConveyorTrainer
 
         public void Configure(Washer prefab, Transform spawn, PusherActuator pusher, Renderer lamp)
         { washerPrefab = prefab; spawnPoint = spawn; actuator = pusher; sensorLamp = lamp; }
+        public void ConfigureModelGeometry(Transform frame, Vector3 halfExtents, float delay, Renderer lamp,
+            PusherActuator.MotionVisual originalMotion, PusherActuator.MotionVisual spareMotion)
+        {
+            beltFrame = frame;
+            beltHalfExtents = halfExtents;
+            sensorDelay = delay;
+            sensorLamp = lamp;
+            originalPusherMotion = originalMotion;
+            sparePusherMotion = spareMotion;
+        }
         public void Initialize(TrainingStation training)
         { station = training; BindModel(training.Model); }
         public void BindModel(MaintenanceModel equipment)
@@ -80,14 +94,24 @@ namespace ConveyorTrainer
                 var washer = washers[i];
                 if (washer == null || washer.Consumed) continue;
                 var p = washer.Body.position;
-                if (p.x >= beltXLimits.x && p.x <= beltXLimits.y && Mathf.Abs(p.z) < beltHalfWidth && p.y > 0.65f && p.y < 1.05f)
+                if (IsOnBelt(p))
                 {
-                    var v = washer.Body.velocity;
-                    v.x = beltSpeed;
-                    washer.Body.velocity = v;
+                    var direction = beltFrame != null ? beltFrame.right : Vector3.right;
+                    var velocity = washer.Body.velocity;
+                    washer.Body.velocity = velocity + direction * (beltSpeed - Vector3.Dot(velocity, direction));
                 }
                 if (p.y < -1f || Time.time >= washer.ExpiresAt) washer.Consume(false, false);
             }
+        }
+
+        private bool IsOnBelt(Vector3 position)
+        {
+            if (beltFrame == null)
+                return position.x >= beltXLimits.x && position.x <= beltXLimits.y && Mathf.Abs(position.z) < beltHalfWidth
+                    && position.y > 0.65f && position.y < 1.05f;
+            var local = beltFrame.InverseTransformPoint(position);
+            return Mathf.Abs(local.x) <= beltHalfExtents.x && Mathf.Abs(local.y) <= beltHalfExtents.y
+                && Mathf.Abs(local.z) <= beltHalfExtents.z;
         }
 
         public Washer Spawn(bool metallic)
@@ -126,6 +150,12 @@ namespace ConveyorTrainer
             lastRevision = model.Revision;
             strokes.Clear();
             actuator?.ResetStroke();
+            if (actuator != null)
+            {
+                var mounted = model.Pusher?.Id;
+                actuator.BindMovingPart(mounted == ItemId.PusherOriginal ? originalPusherMotion
+                    : mounted == ItemId.PusherSpare ? sparePusherMotion : default);
+            }
             lampUntil = 0;
             if (model.Running) return;
             ResetSimulation();

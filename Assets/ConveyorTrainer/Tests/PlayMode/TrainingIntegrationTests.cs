@@ -9,6 +9,7 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 namespace ConveyorTrainer.Tests
 {
@@ -29,17 +30,64 @@ namespace ConveyorTrainer.Tests
         private void Do(Request request)
             => Assert.That(station.Execute(request, request.ToString()).Succeeded, Is.True, request.ToString());
 
+        [UnityTearDown]
+        public IEnumerator TearDown()
+        {
+            // Disable actions before the simulator removes its devices during scene unloading.
+            foreach (var manager in UnityEngine.Object.FindObjectsOfType<InputActionManager>())
+                foreach (var asset in manager.actionAssets) asset.Disable();
+            yield return null;
+        }
+
         [UnityTest] public IEnumerator StoppingClearsWashersPendingCommandsAndStroke()
         {
-            Do(new Request(Operation.Power));
+            Do(new Request(Operation.Start));
             var washer = line.Spawn(true); line.Detect(washer);
             Assert.That(line.PendingStrokeCount, Is.EqualTo(1));
+            var installed = UnityEngine.Object.FindObjectsOfType<ServiceItem>().Single(i => i.ItemId == ItemId.PusherOriginal);
+            var motion = installed.GetComponentsInChildren<Transform>().Single(t => t.name == "PusherMovingPart");
+            var home = motion.localPosition;
             line.Actuator.TryStroke();
-            Do(new Request(Operation.Power));
+            yield return new WaitForFixedUpdate();
+            Assert.That(motion.localPosition, Is.Not.EqualTo(home));
+            Do(new Request(Operation.Stop));
+            Do(new Request(Operation.Stop));
             yield return null;
+            Assert.That(station.Model.Running, Is.False);
             Assert.That(line.ActiveWasherCount, Is.Zero);
             Assert.That(line.PendingStrokeCount, Is.Zero);
             Assert.That(line.Actuator.Moving, Is.False);
+            Assert.That(motion.localPosition, Is.EqualTo(home));
+        }
+
+        [UnityTest] public IEnumerator DisconnectedLinesHideIndividuallyAndRestartRestoresThem()
+        {
+            var cable = GameObject.Find("ТраекторияNurbs.001").GetComponent<MeshRenderer>();
+            var firstTube = GameObject.Find("ТраекторияNurbs.004").GetComponent<MeshRenderer>();
+            var secondTube = GameObject.Find("ТраекторияNurbs.005").GetComponent<MeshRenderer>();
+            station.BeginScenario(1);
+            Do(new Request(Operation.Stop));
+            Do(new Request(Operation.SensorCable));
+            yield return null;
+            Assert.That(cable.enabled, Is.False);
+            Do(new Request(Operation.SensorCable));
+            yield return null;
+            Assert.That(cable.enabled, Is.True);
+
+            station.BeginScenario(2);
+            Do(new Request(Operation.Stop));
+            Do(new Request(Operation.Air));
+            Do(new Request(Operation.Vent));
+            Do(new Request(Operation.PusherTube));
+            yield return null;
+            Assert.That(firstTube.enabled, Is.False);
+            Assert.That(secondTube.enabled, Is.True);
+            Do(new Request(Operation.PusherTube, index: 1));
+            yield return null;
+            Assert.That(secondTube.enabled, Is.False);
+            station.Restart();
+            yield return null;
+            Assert.That(firstTube.enabled && secondTube.enabled, Is.True);
         }
 
         [UnityTest] public IEnumerator SensorIgnoresPlasticAndDeduplicatesMetalDetection()
@@ -142,9 +190,9 @@ namespace ConveyorTrainer.Tests
             var inputDriver = new GameObject("Keyboard Mouse Driver").AddComponent<KeyboardMouseDriver>();
             inputDriver.Keyboard = keyboard; inputDriver.Mouse = mouse;
             var ray = UnityEngine.Object.FindObjectsOfType<XRRayInteractor>().Single(r => r.name == "Work Ray" && r.transform.parent.name == "Right Controller");
-            var button = UnityEngine.Object.FindObjectsOfType<MaintenanceTarget>().Single(t => t.TargetId == "power");
+            var button = UnityEngine.Object.FindObjectsOfType<MaintenanceTarget>().Single(t => t.TargetId == "power.start");
             var aim = new GameObject("Test Aim");
-            aim.transform.position = button.transform.position + Vector3.back;
+            aim.transform.position = button.transform.position + Vector3.right;
             aim.transform.rotation = Quaternion.LookRotation(button.transform.position - aim.transform.position);
             var originalOrigin = ray.rayOriginTransform;
             var grabRay = UnityEngine.Object.FindObjectsOfType<XRRayInteractor>().Single(r => r.transform.name == "Right Controller");

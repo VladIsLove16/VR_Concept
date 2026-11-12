@@ -21,6 +21,16 @@ namespace ConveyorTrainer.Tests
             Assert.That(components.OfType<TrainingStation>().Count(), Is.EqualTo(1));
             Assert.That(components.OfType<ServiceItem>().Count(), Is.EqualTo(6));
             Assert.That(components.OfType<MaintenanceTarget>().Count(), Is.EqualTo(13));
+            var targets = components.OfType<MaintenanceTarget>().ToArray();
+            var start = targets.Single(t => t.TargetId == "power.start");
+            var stop = targets.Single(t => t.TargetId == "power.stop");
+            Assert.That(start.Operation, Is.EqualTo(Operation.Start));
+            Assert.That(stop.Operation, Is.EqualTo(Operation.Stop));
+            var startRenderer = (Renderer)new SerializedObject(start).FindProperty("visual").objectReferenceValue;
+            var stopRenderer = (Renderer)new SerializedObject(stop).FindProperty("visual").objectReferenceValue;
+            Assert.That(startRenderer.sharedMaterial.color.g, Is.GreaterThan(startRenderer.sharedMaterial.color.r));
+            Assert.That(stopRenderer.sharedMaterial.color.r, Is.GreaterThan(stopRenderer.sharedMaterial.color.g));
+            Assert.That(targets.Count(t => t.Operation == Operation.PusherBolt), Is.EqualTo(1));
             foreach (var component in components)
             {
                 var serialized = new SerializedObject(component);

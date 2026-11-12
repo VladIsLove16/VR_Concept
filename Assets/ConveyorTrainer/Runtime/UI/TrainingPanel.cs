@@ -21,14 +21,35 @@ namespace ConveyorTrainer
         public void SetTargets(MaintenanceTarget[] sceneTargets) { targets = sceneTargets; }
         public void Initialize(TrainingStation owner)
         {
+            Disconnect();
             station = owner;
+            if (isActiveAndEnabled) Connect();
+        }
+
+        private void OnEnable() => Connect();
+        private void OnDisable() => Disconnect();
+
+        private void Connect()
+        {
+            if (station == null) return;
             station.Refreshed += Refresh;
             next.onClick.AddListener(station.Next);
             restart.onClick.AddListener(station.Restart);
+            Refresh();
         }
+
+        private void Disconnect()
+        {
+            if (ReferenceEquals(station, null)) return;
+            station.Refreshed -= Refresh;
+            if (next != null) next.onClick.RemoveListener(station.Next);
+            if (restart != null) restart.onClick.RemoveListener(station.Restart);
+        }
+
         private void Refresh()
         {
-            if (station.Attempt == null) return;
+            if (this == null || !isActiveAndEnabled || station == null || station.Attempt == null
+                || title == null || task == null || feedback == null || equipment == null || hover == null || next == null) return;
             title.text = $"{station.ScenarioIndex + 1}/5  {station.Scenario.Title}";
             var text = new StringBuilder();
             string suggestedId = null;
@@ -51,13 +72,6 @@ namespace ConveyorTrainer
             equipment.text = $"Линия: {(model.Running ? "работает" : "остановлена")}    Воздух: {(model.AirOpen ? "открыт" : "закрыт")}\nДавление: {(model.Pressure ? "есть" : "нет")}";
             next.interactable = station.Completed && station.ScenarioIndex + 1 < station.ScenarioCount;
             if (targets != null) foreach (var target in targets) if (target != null) target.Suggested = !station.Completed && station.Scenario.Guided && target.TargetId == suggestedId;
-        }
-        private void OnDestroy()
-        {
-            if (station == null) return;
-            station.Refreshed -= Refresh;
-            next.onClick.RemoveListener(station.Next);
-            restart.onClick.RemoveListener(station.Restart);
         }
     }
 }

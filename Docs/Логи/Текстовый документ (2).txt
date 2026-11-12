@@ -1,0 +1,16 @@
+{
+    "schemaVersion": 1,
+    "attemptId": "daea576788734a03b1e213e8e0814995",
+    "scenarioId": "01-introduction",
+    "startedUtc": "2026-10-23T17:17:43.8771386Z",
+    "durationSeconds": 166.9090331,
+    "status": "completed",
+    "errorCount": 0,
+    "completedRequirements": [
+        "Started",
+        "InfoConveyor",
+        "InfoSensor",
+        "InfoPusher"
+    ],
+    "errors": []
+}

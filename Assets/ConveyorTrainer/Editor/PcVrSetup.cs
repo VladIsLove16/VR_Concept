@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.XR.CoreUtils;
@@ -136,8 +137,13 @@ namespace ConveyorTrainer.Editor
                     var direct = GetOrAdd<XRDirectInteractor>(nearObject.gameObject);
                     direct.interactionLayers = 2;
                     direct.physicsLayerMask = 1 << 10;
-                    direct.selectActionTrigger = XRBaseControllerInteractor.InputTriggerType.StateChange;
+                    direct.selectActionTrigger = XRBaseControllerInteractor.InputTriggerType.State;
                     direct.allowActivate = true;
+                    distanceGrab.selectActionTrigger = XRBaseControllerInteractor.InputTriggerType.State;
+                    distanceGrab.hitClosestOnly = true;
+                    distanceGrab.raycastMask = 1 << 10;
+                    var group = GetOrAdd<XRInteractionGroup>(hand.gameObject);
+                    group.startingGroupMembers = new List<UnityEngine.Object> { direct, distanceGrab };
                     GetOrAdd<HandInteractionRouter>(hand.gameObject).Configure(direct, distanceGrab, workRay);
                 }
                 var snapTurn = GetOrAdd<ActionBasedSnapTurnProvider>(rig);
@@ -197,14 +203,19 @@ namespace ConveyorTrainer.Editor
             PrefabUtility.RecordPrefabInstancePropertyModifications(origin.CameraFloorOffsetObject.transform);
             foreach (var hand in origin.GetComponentsInChildren<InteractorHand>(true))
             {
-                // Distance pickup remains available for keyboard testing; PC VR uses hand proximity.
+                // Both paths use Grip; the interaction group gives nearby pickup priority.
                 var distanceGrab = hand.GetComponent<XRRayInteractor>();
-                distanceGrab.enabled = !pcVr;
+                distanceGrab.enabled = true;
                 PrefabUtility.RecordPrefabInstancePropertyModifications(distanceGrab);
                 foreach (var interactor in hand.GetComponentsInChildren<XRBaseInteractor>(true))
                 {
                     interactor.interactionManager = manager;
                     PrefabUtility.RecordPrefabInstancePropertyModifications(interactor);
+                }
+                foreach (var group in hand.GetComponentsInChildren<XRInteractionGroup>(true))
+                {
+                    group.interactionManager = manager;
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(group);
                 }
             }
             foreach (var simulator in roots.SelectMany(root => root.GetComponentsInChildren<XRDeviceSimulator>(true)))
@@ -260,7 +271,7 @@ namespace ConveyorTrainer.Editor
             EditorUtility.SetDirty(feature);
         }
 
-        private const string PcVrControls = "УПРАВЛЕНИЕ PC VR\nGrip — взять предмет рядом с рукой\nОтпустить Grip — поставить в выделенное место\nИнструмент к крепежу + Trigger — действие\nСвободная рука: луч + Trigger — кнопки и UI\nЛуч на пол: Trigger и отпустить — телепорт\nПравый стик / тачпад вбок — поворот на 30°\nОдна рука удерживает один предмет";
+        private const string PcVrControls = "УПРАВЛЕНИЕ PC VR\nGrip — взять предмет рядом или по лучу\nGrip можно удерживать до касания предмета\nОтпустить Grip — поставить в выделенное место\nИнструмент к крепежу + Trigger — действие\nСвободная рука: луч + Trigger — кнопки и UI\nЛуч на пол: Trigger и отпустить — телепорт\nПравый стик / тачпад вбок — поворот на 30°\nОдна рука удерживает один предмет";
         private const string SimulatorControls = "УПРАВЛЕНИЕ XR-СИМУЛЯТОРОМ\nT / Y — левая / правая рука\nПКМ — управление головой\nWASD / Q E — перемещение устройства\nR — поворот / перемещение мышью\nG — удерживать предмет\nИнструмент к крепежу + ЛКМ — действие\nСвободная рука: ЛКМ — кнопки / UI / телепорт";
     }
 }

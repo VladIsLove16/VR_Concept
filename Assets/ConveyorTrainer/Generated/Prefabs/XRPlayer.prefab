@@ -236,7 +236,7 @@ MonoBehaviour:
   m_OnSelectExited:
     m_PersistentCalls:
       m_Calls: []
-  m_SelectActionTrigger: 1
+  m_SelectActionTrigger: 0
   m_HideControllerOnSelect: 0
   m_AllowHoveredActivate: 0
   m_TargetPriorityMode: 0
@@ -570,7 +570,7 @@ MonoBehaviour:
   m_OnSelectExited:
     m_PersistentCalls:
       m_Calls: []
-  m_SelectActionTrigger: 1
+  m_SelectActionTrigger: 0
   m_HideControllerOnSelect: 0
   m_AllowHoveredActivate: 0
   m_TargetPriorityMode: 0
@@ -848,7 +848,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: cef4240b-d89c-415c-95bb-9bbbef14ff12
+      m_Id: e2e70354-3337-48f0-be99-94e8b7b1432e
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -2155,6 +2155,7 @@ GameObject:
   - component: {fileID: 5446201901840351834}
   - component: {fileID: 9142928861235287362}
   - component: {fileID: 8716237276039444880}
+  - component: {fileID: 2822928768665267366}
   m_Layer: 0
   m_Name: Left Controller
   m_TagString: Untagged
@@ -2292,7 +2293,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: ca078d50-b7f2-4ed1-85b5-bf4a5547eaea
+      m_Id: f670f8da-8c07-4c32-b445-65ce62b48300
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -2304,7 +2305,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 91508a86-85fd-45f7-a571-0e1bdfa0aa10
+      m_Id: 55f50fcf-3e62-4d69-b6c4-e9c7546f7e5a
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -2352,7 +2353,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 09d20bcb-ec45-475d-9e55-ee967c943f1d
+      m_Id: 985b937d-e96c-4b95-a714-9df9484824c8
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -2468,7 +2469,7 @@ MonoBehaviour:
   m_OnSelectExited:
     m_PersistentCalls:
       m_Calls: []
-  m_SelectActionTrigger: 1
+  m_SelectActionTrigger: 0
   m_HideControllerOnSelect: 0
   m_AllowHoveredActivate: 0
   m_TargetPriorityMode: 0
@@ -2523,10 +2524,10 @@ MonoBehaviour:
   m_ConeCastAngle: 6
   m_RaycastMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1024
   m_RaycastTriggerInteraction: 1
   m_RaycastSnapVolumeInteraction: 1
-  m_HitClosestOnly: 0
+  m_HitClosestOnly: 1
   m_HoverToSelect: 0
   m_HoverTimeToSelect: 0.5
   m_AutoDeselect: 0
@@ -2566,6 +2567,24 @@ MonoBehaviour:
   workRay: {fileID: 7243262688947380042}
   lineVisual: {fileID: 3945244521630526880}
   lineRenderer: {fileID: 3683309101944688118}
+--- !u!114 &2822928768665267366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5794814171679774559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a50d88b55b45648927679791f472de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_GroupName: 
+  m_InteractionManager: {fileID: 0}
+  m_StartingGroupMembers:
+  - {fileID: 1923619988216435366}
+  - {fileID: 9142928861235287362}
+  m_StartingInteractionOverridesMap: []
 --- !u!1 &5902351463941727360
 GameObject:
   m_ObjectHideFlags: 0
@@ -2579,6 +2598,7 @@ GameObject:
   - component: {fileID: 4224064662311699024}
   - component: {fileID: 7716513036367531794}
   - component: {fileID: 3501667359729656401}
+  - component: {fileID: 7795686021295383375}
   m_Layer: 0
   m_Name: Right Controller
   m_TagString: Untagged
@@ -2716,7 +2736,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 12424be9-11ba-47dd-bcac-8a40a14a158b
+      m_Id: 0845bdf9-14c0-47a8-be5c-b843f0e9e8e1
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -2728,7 +2748,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 4290e170-6b5c-40b7-a4d8-a31bd440b475
+      m_Id: ea5734db-5453-47b9-b092-d09dd448f324
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -2776,7 +2796,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: e3330df4-56dd-4947-8d01-1aacbd08395c
+      m_Id: 6911ab42-d8de-40bb-839f-9ad94bc6e6d0
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -2892,7 +2912,7 @@ MonoBehaviour:
   m_OnSelectExited:
     m_PersistentCalls:
       m_Calls: []
-  m_SelectActionTrigger: 1
+  m_SelectActionTrigger: 0
   m_HideControllerOnSelect: 0
   m_AllowHoveredActivate: 0
   m_TargetPriorityMode: 0
@@ -2947,10 +2967,10 @@ MonoBehaviour:
   m_ConeCastAngle: 6
   m_RaycastMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1024
   m_RaycastTriggerInteraction: 1
   m_RaycastSnapVolumeInteraction: 1
-  m_HitClosestOnly: 0
+  m_HitClosestOnly: 1
   m_HoverToSelect: 0
   m_HoverTimeToSelect: 0.5
   m_AutoDeselect: 0
@@ -2990,6 +3010,24 @@ MonoBehaviour:
   workRay: {fileID: 8701209443503746712}
   lineVisual: {fileID: 8250005291778751651}
   lineRenderer: {fileID: 617252973222685097}
+--- !u!114 &7795686021295383375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5902351463941727360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a50d88b55b45648927679791f472de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_GroupName: 
+  m_InteractionManager: {fileID: 0}
+  m_StartingGroupMembers:
+  - {fileID: 8526928542484251889}
+  - {fileID: 7716513036367531794}
+  m_StartingInteractionOverridesMap: []
 --- !u!1 &8457120440956315243
 GameObject:
   m_ObjectHideFlags: 0

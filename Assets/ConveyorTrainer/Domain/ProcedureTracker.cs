@@ -82,7 +82,11 @@ namespace ConveyorTrainer.Domain
             if (!result.Succeeded) return;
             switch (r.Operation)
             {
-                case Operation.Power: observed.Add(model.Running ? Requirement.Started : Requirement.Stopped); break;
+                case Operation.Power:
+                case Operation.Start:
+                case Operation.Stop:
+                    observed.Add(model.Running ? Requirement.Started : Requirement.Stopped);
+                    break;
                 case Operation.Inspect:
                     observed.Add((Requirement)((int)Requirement.InfoConveyor + r.Index)); break;
                 case Operation.SensorCable:
@@ -103,7 +107,7 @@ namespace ConveyorTrainer.Domain
                     if (model.Pusher?.Id == ItemId.PusherSpare && model.TubeConnected(0) && model.TubeConnected(1)) observed.Add(Requirement.TubesRestored);
                     break;
                 case Operation.PusherBolt:
-                    if (!model.BoltTight(0) && !model.BoltTight(1)) observed.Add(Requirement.PusherBoltsReleased);
+                    if (!model.PusherSecured) observed.Add(Requirement.PusherBoltsReleased);
                     if (model.Pusher?.Id == ItemId.PusherSpare && model.PusherSecured) observed.Add(Requirement.PusherBoltsSecured);
                     break;
                 case Operation.Place:

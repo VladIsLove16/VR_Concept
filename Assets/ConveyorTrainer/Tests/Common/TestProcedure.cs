@@ -9,7 +9,7 @@ namespace ConveyorTrainer.Tests
         {
             var first = reverse ? 1 : 0;
             var second = 1 - first;
-            execute(new Request(Operation.Power));
+            execute(new Request(Operation.Stop));
             if (fault == Fault.Sensor)
             {
                 execute(new Request(Operation.SensorCable));
@@ -32,20 +32,18 @@ namespace ConveyorTrainer.Tests
                 execute(new Request(Operation.PusherTube, index: first));
                 execute(new Request(Operation.PusherTube, index: second));
                 execute(new Request(Operation.Grab, item: ItemId.Driver));
-                execute(new Request(Operation.PusherBolt, index: second));
-                execute(new Request(Operation.PusherBolt, index: first));
+                execute(new Request(Operation.PusherBolt));
                 execute(new Request(Operation.Grab, Hand.Left, ItemId.PusherOriginal));
                 execute(new Request(Operation.Place, Hand.Left, ItemId.PusherOriginal));
                 execute(new Request(Operation.Grab, Hand.Left, ItemId.PusherSpare));
                 execute(new Request(Operation.Place, Hand.Left, ItemId.PusherSpare, destination: Location.PusherMount));
-                execute(new Request(Operation.PusherBolt, index: first));
-                execute(new Request(Operation.PusherBolt, index: second));
+                execute(new Request(Operation.PusherBolt));
                 execute(new Request(Operation.Place, item: ItemId.Driver));
                 execute(new Request(Operation.PusherTube, index: second));
                 execute(new Request(Operation.PusherTube, index: first));
                 execute(new Request(Operation.Air));
             }
-            execute(new Request(Operation.Power));
+            execute(new Request(Operation.Start));
         }
     }
 }
